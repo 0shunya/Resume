@@ -1,97 +1,125 @@
+import React from "react";
 import Education from "./Education";
 import { Experience } from "./Experience";
 import Projects from "./Projects";
 import Extracurricular from "./Extracurriculars";
 import ContactInfo from "./ContactInfo";
-import { spring, useCurrentFrame, interpolate } from "remotion";
+import { useCurrentFrame, interpolate, useVideoConfig } from "remotion";
+import BackgroundAnimation from "./BackgroundAnimation";
 
 export const Resume: React.FC = () => {
   const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
 
-  // Slide-in animation for each section
-  const slideIn = (delay: number) =>
-    spring({
-      frame: frame - delay,
-      fps: 30,
-      from: -50,
-      to: 0,
-    });
+  const slideDuration = fps * 3;
+
+  const getOpacity = (start: number) => {
+    return interpolate(
+      frame,
+      [start, start + 15, start + slideDuration - 15, start + slideDuration],
+      [0, 1, 1, 0],
+      {
+        extrapolateRight: "clamp",
+      },
+    );
+  };
+
+  const totalSlides = 6;
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
-        padding: "40px",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
         height: "100%",
         width: "100%",
         backgroundColor: "#FFFFFF",
         fontFamily: "Arial, sans-serif",
         color: "#333",
+        position: "relative",
       }}
     >
-      <h1
+      <BackgroundAnimation />
+
+      <div
         style={{
-          fontSize: "2.5rem",
-          fontWeight: "bold",
-          marginBottom: "0.5rem",
+          opacity: getOpacity(0),
+          position: "absolute",
+          textAlign: "center",
         }}
       >
-        Shlok Singh
-      </h1>
-      <p
+        <h1 style={{ fontSize: "2.5rem", fontWeight: "bold" }}>Shlok Singh</h1>
+        <p style={{ fontSize: "1.2rem", color: "black", fontWeight: "bold" }}>
+          Full Stack Developer
+        </p>
+      </div>
+
+      <div
         style={{
-          fontSize: "1.2rem",
-          color: "Black",
-          marginBottom: "2rem",
-          fontStyle: "bold",
+          opacity: getOpacity(slideDuration),
+          position: "absolute",
+          textAlign: "center",
         }}
       >
-        Full Stack Developer
-      </p>
-      {/* <ContactInfo /> */}
-      <div style={{ marginTop: "2rem", width: "100%", maxWidth: "700px" }}>
-        <div
-          style={{
-            transform: `translateY(${slideIn(0)}px)`,
-            opacity: interpolate(frame, [0, 10], [0, 1]),
-          }}
-        >
-          <Education />
-        </div>
-        <div
-          style={{
-            transform: `translateY(${slideIn(20)}px)`,
-            opacity: interpolate(frame, [20, 30], [0, 1]),
-          }}
-        >
-          <Experience />
-        </div>
-        <div
-          style={{
-            transform: `translateY(${slideIn(40)}px)`,
-            opacity: interpolate(frame, [40, 50], [0, 1]),
-          }}
-        >
-          <Projects />
-        </div>
-        <div
-          style={{
-            transform: `translateY(${slideIn(60)}px)`,
-            opacity: interpolate(frame, [60, 70], [0, 1]),
-          }}
-        >
-          <Extracurricular />
-        </div>
-        <div
-          style={{
-            transform: `translateY(${slideIn(60)}px)`,
-            opacity: interpolate(frame, [60, 70], [0, 1]),
-          }}
-        >
-          <ContactInfo />
-        </div>
+        <Education />
+      </div>
+
+      <div
+        style={{
+          opacity: getOpacity(slideDuration * 2),
+          position: "absolute",
+          textAlign: "center",
+        }}
+      >
+        <Experience />
+      </div>
+
+      <div
+        style={{
+          opacity: getOpacity(slideDuration * 3),
+          position: "absolute",
+          textAlign: "center",
+        }}
+      >
+        <Projects />
+      </div>
+
+      <div
+        style={{
+          opacity: getOpacity(slideDuration * 4),
+          position: "absolute",
+          textAlign: "center",
+        }}
+      >
+        <Extracurricular />
+      </div>
+
+      <div
+        style={{
+          opacity: getOpacity(slideDuration * 5),
+          position: "absolute",
+          textAlign: "center",
+        }}
+      >
+        <ContactInfo />
+      </div>
+
+      <div
+        style={{
+          opacity: getOpacity(slideDuration * 6),
+          position: "absolute",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ fontSize: "3rem", fontWeight: "bold", color: "#333" }}>
+          Thank You for Watching!
+        </h1>
+        <p style={{ fontSize: "1.2rem", color: "#666" }}>
+          Connect with me on LinkedIn or GitHub.
+        </p>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-// src/SkillsAndCourses.js
 import { AbsoluteFill } from "remotion";
 
 const SkillsAndCourses = () => {

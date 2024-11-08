@@ -5,7 +5,7 @@ import Projects from "./Projects";
 import Extracurricular from "./Extracurriculars";
 import ContactInfo from "./ContactInfo";
 import { useCurrentFrame, interpolate, useVideoConfig } from "remotion";
-import BackgroundAnimation from "./BackgroundAnimation";
+import CloudAnimation from "./BackgroundAnimation";
 
 export const Resume: React.FC = () => {
   const frame = useCurrentFrame();
@@ -42,7 +42,7 @@ export const Resume: React.FC = () => {
         position: "relative",
       }}
     >
-      <BackgroundAnimation />
+      <CloudAnimation />
 
       <div
         style={{

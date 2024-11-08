@@ -1,52 +1,53 @@
-import React from "react";
-import { useCurrentFrame, useVideoConfig, random } from "remotion";
+import { interpolate, useCurrentFrame, useVideoConfig, Audio } from "remotion";
+import cloudimg from "../images/cloud.png";
+import backgroundMusic from "../music/Under The Sun - Everet Almond.mp3";
 
-const BubbleBackground: React.FC = () => {
+const CloudAnimation: React.FC = () => {
   const frame = useCurrentFrame();
-  const { width, height } = useVideoConfig();
+  const { durationInFrames, width } = useVideoConfig();
 
-  // Generate random bubbles
-  const bubbles = Array.from({ length: 20 }).map((_, i) => ({
-    size: random(`size-${i}`) * 20 + 10,
-    x: random(`x-${i}`) * width,
-    delay: random(`delay-${i}`) * 100,
-    speed: random(`speed-${i}`) * 0.5 + 0.5,
-  }));
+  const clouds = [
+    { top: "20%", speedMultiplier: 1 },
+    { top: "40%", speedMultiplier: 1.2 },
+    { top: "60%", speedMultiplier: 0.8 },
+  ];
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        overflow: "hidden",
-        zIndex: -1,
-      }}
-    >
-      {bubbles.map((bubble, index) => {
-        const translateY = ((frame + bubble.delay) * bubble.speed) % height;
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      <Audio src={backgroundMusic} volume={0.3} />
+      {clouds.map((cloud, index) => {
+        const cloudPosition = interpolate(
+          frame,
+          [0, durationInFrames],
+          [-width * cloud.speedMultiplier, width * cloud.speedMultiplier],
+        );
 
         return (
           <div
             key={index}
             style={{
               position: "absolute",
-              bottom: translateY - bubble.size,
-              left: bubble.x,
-              width: bubble.size,
-              height: bubble.size,
-              borderRadius: "50%",
-              backgroundColor: "#a0c4ff",
-              opacity: 0.3,
-              transform: `translateY(-${translateY}px)`,
+              top: cloud.top,
+              left: cloudPosition,
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
+          >
+            <img
+              src={cloudimg}
+              alt={`Moving Cloud ${index}`}
+              style={{
+                width: "200px",
+                opacity: 0.7,
+              }}
+            />
+          </div>
         );
       })}
     </div>
   );
 };
 
-export default BubbleBackground;
+export default CloudAnimation;
